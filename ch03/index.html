@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>03Vuex中的state</title>
+    <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/vuex@2.0.0/dist/vuex.js"></script>    
+</head>
+<body>
+    <div id="app">
+
+    </div>
+    <script>
+        const store = new Vuex.Store({
+            state: {
+                count: 50,
+                msg: 'Hello Vuex'
+            },
+            mutations: {
+                add(state) {
+                    state.count++ 
+                }
+            }
+        })
+
+        const Counter = {
+            template: `<div>{{count}} {{msg}} {{totalCount}} {{sayHi}}</div>`,
+            data() {
+                return {
+                    a: 5
+                }
+            },
+            // 第一种写法：
+            // computed: {
+            //     count() {
+            //         // return this.$store.state.count (可以这样使用，因为store已经注入到组件中)
+            //         return store.state.count
+            //     }
+            // },
+
+            // 第二种写法：
+            // computed: Vuex.mapState(["count", "msg"])
+
+            // 第三种写法：
+            // computed: Vuex.mapState({
+            //     count: "count",
+            //     msg: "msg"
+            // })
+
+            // 第四种写法：
+            // computed: Vuex.mapState({
+            //     count: (state) => state.count,
+            //     msg: function(state) {
+            //         return state.msg
+            //     },
+            //     totalCount: function(state) {
+            //         return this.a + state.count
+            //     }
+            // })
+
+            // 第五种写法展开运算符：
+            computed: {
+                sayHi() {return "Hi"},
+                ...Vuex.mapState({
+                    count: (state) => state.count,
+                    msg: function(state) {
+                        return state.msg
+                    },
+                    totalCount: function(state) {
+                        return this.a + state.count
+                    }
+                })
+            }
+
+        }
+
+        const app = new Vue({
+            el: '#app',
+            store,
+            components: { Counter },
+            template: `
+                <div class="app">
+                    <Counter></Counter>
+                </div>
+            `
+        })
+    </script>
+</body>
+</html>
