@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>08vuex中的Module（下）</title>
+    <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/vuex@2.0.0/dist/vuex.js"></script>    
+</head>
+<body>
+    <div id="app"></div>
+    <script>
+        const moduleA = {
+            namespaced: true,
+            state: {
+                count: 0
+            },
+            mutations: {
+                add(state) {
+                    state.count++
+                }
+            },
+            getters: {
+                doubleCount(state) {
+                    return state.count * 2
+                },
+                sumWithRootCount(state, getters, rootState) {
+                    return state.count + rootState.count
+                }
+            },
+            actions: {
+                addIfOddOnRootSum({state, commit, rootState }) {
+                    commit("add")
+                }
+            }
+        }
+
+        const store = new Vuex.Store({
+            state: {
+                count: 1
+            },
+            modules: {
+                a: moduleA
+            }
+        })
+
+        const app = new Vue({
+            el: "#app",
+            store,
+            computed: Vuex.mapState({
+                count: function(state) {
+                    return state.count + state.a.count;
+                },
+                double: function(state) {
+                    return this.$store.getters.doubleCount
+                }
+            }),
+            methods: {
+                addIfOddOnRootSum() {
+                    this.$store.commit("add")
+                }
+            },
+            template: `
+                <div>
+                    {{count}}
+                    <div>{{double}}</div>
+                    <button @click="addIfOddOnRootSum">加</button>
+                </div>
+            `
+        })
+    </script>
+</body>
+</html>

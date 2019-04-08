@@ -10,23 +10,54 @@
     <script src="https://unpkg.com/vuex@2.0.0/dist/vuex.js"></script>    
 </head>
 <body>
+    <div id="app">
+
+    </div>
     <script>
+        const Counter = {
+            methods: Vuex.mapActions(["add"]),
+            template: `
+                <div>
+                    {{ $store.state.count }}
+                    <button @click="add">操作</button>
+                </div>
+            `
+        }
         const store = new Vuex.Store({
             state: {
                 count: 0
             },
             mutations: {
                 add(state) {
-                    state.count++ 
+                    state.count ++
                 }
             },
             actions: {
-                add(context) {
+                add(context, count) {
                     context.commit('add')
+                },
+                addAsync({ commit }) {
+                    return new Promise((resolve, reject) => {
+                        setTimeout(() => {
+                            commit('add')
+                            resolve()
+                        }, 3000)
+                    })
                 }
             }
         })
-        store.dispatch('add')
+
+        const app = new Vue({
+            el: '#app',
+            store,
+            computed: Vuex.mapState(['count']),
+            components: { Counter },
+            template: `
+                <div>
+                    <counter></counter>
+                </div>
+            `
+        })
     </script>
 </body>
 </html>
