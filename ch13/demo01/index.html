@@ -32,9 +32,16 @@
         const app = new Vue({
             el: '#app',
             store,
-            computed: Vuex.mapState({
-                count: 'count'
-            }),
+            computed: {
+                count: {
+                    get() {
+                        return this.$store.state.count
+                    },
+                    set(value) {
+                        this.$store.commit("updateCount", value)
+                    }
+                }
+            },
             methods: {
                 updateMessage(e) {
                     const value = e.target.value
