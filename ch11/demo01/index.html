@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>011vuex的插件</title>
+    <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/vuex@2.0.0/dist/vuex.js"></script>    
+</head>
+<body>
+    <script>
+        const myPlugin = store => {
+            console.log("myPlugin installed");
+            store.subscribe((mutations, state) => {
+                console.log("myPluginL[", mutations,"]");
+            })
+        }
+        const store = new Vuex.Store({
+            state: {
+                count: 0
+            },
+            mutations: {
+                add(state) {
+                    state.count++ 
+                }
+            },
+            plugins: [myPlugin]
+        })
+        console.log(store.state.count)
+        store.commit('add')
+        console.log(store.state.count)
+    </script>
+</body>
+</html>

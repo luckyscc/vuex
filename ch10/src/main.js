@@ -1,15 +1,10 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import createStore from './store'
+import store from './store'
+import App from './components/App.vue'
 
-Vue.use(Vuex)
-const store = createStore()
 const app = new Vue({
     el: '#app',
     store,
-    template: `
-        <div>
-            Hello Vue {{ $store.state.count }}
-        </div>
-    `
+    render: h=>h(App)
 })
